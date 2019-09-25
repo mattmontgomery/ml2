@@ -1,0 +1,24 @@
+{
+  "name": "ml2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.1",
+    "bluebird": "^3.5.5",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "prettier": "^1.18.2",
+    "sharp": "^0.23.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3"
+  },
+  "scripts": {
+    "start": "ts-node bin/start.ts",
+    "dev": "nodemon -e ts -x 'BASE_PATH=. yarn start' --verbose"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.7",
+    "nodemon": "^1.19.2"
+  }
+}
