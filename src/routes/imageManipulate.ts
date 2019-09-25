@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import fileStats from "../fileStats";
+import manipulate, {
+  Instructions,
+  parseInstructions,
+  parseInstructionsOrder
+} from "../manipulate";
 import * as sharp from "sharp";
 import * as path from "path";
-
-interface Instructions {
-  resize?: string;
-  gravity?: string;
-  fit?: "contain" | "cover";
-}
 
 export default async function imageManipulate(
   req: Request,
@@ -19,20 +18,16 @@ export default async function imageManipulate(
   const instructionsOrder = parseInstructionsOrder(
     req.params.imageInstructions
   );
-  const image = sharp(stats.path);
-  console.log(instructions);
-  instructionsOrder.forEach(instruction => {
-    switch (instruction) {
-      case "resize":
-        const sizes = instructions[instruction].split("x");
-        image.resize({
-          width: parseInt(sizes[0], 10),
-          height: parseInt(sizes[1], 10),
-          fit: instructions.fit ? instructions.fit : "contain",
-          position: instructions.gravity
-        });
-        break;
-    }
+  const image = manipulate({
+    instructions,
+    instructionsOrder,
+    imagePath: path.join(
+      __dirname,
+      "..",
+      "..",
+      "sample-data",
+      req.params.imagePath
+    )
   });
   const outputPath = path.join(
     __dirname,
@@ -40,7 +35,7 @@ export default async function imageManipulate(
     "..",
     "sample-data",
     "resized",
-    `${req.params.imageInstructions.replace(":", "~")}-${req.params.imagePath}`
+    `${req.params.imageInstructions.replace(/:/g, "~")}-${req.params.imagePath}`
   );
   image.toFile(outputPath);
   res.json({
@@ -51,17 +46,4 @@ export default async function imageManipulate(
     outputPath
   });
   next();
-}
-
-function parseInstructions(imageParams: string): Instructions {
-  return imageParams.split("|").reduce((acc, curr) => {
-    return {
-      ...acc,
-      [curr.split(":")[0]]: curr.split(":")[1]
-    };
-  }, {});
-}
-
-function parseInstructionsOrder(imageParams: string): string[] {
-  return imageParams.split("|").map(ins => ins.split(":")[0]);
 }
