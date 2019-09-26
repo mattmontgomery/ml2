@@ -1,4 +1,3 @@
-import { Stats } from "fs";
 import * as path from "path";
 
 import fileStats from "../fileStats";
@@ -9,10 +8,10 @@ export default async function image(
   res: Response,
   next: NextFunction
 ) {
-  const stats = await fileStats(req.params.imagePath);
+  const imagePath = path.join(req.app.get("mediaPath"), req.params.imagePath);
+  const stats = await fileStats(imagePath);
   res.json({
-    message: "hello",
-    headers: req.headers,
+    imagePath,
     exists: !!stats ? "yes" : "nah"
   });
   next();

@@ -48,3 +48,14 @@ export function parseInstructions(imageParams: string): Instructions {
 export function parseInstructionsOrder(imageParams: string): string[] {
   return imageParams.split("|").map(ins => ins.split(":")[0]);
 }
+
+export function stringifyInstructions(instructions: Instructions): string {
+  return Object.keys(instructions)
+    .reduce((acc, ins) => {
+      return [
+        ...acc,
+        `${ins}~${instructions[ins]}`.replace(/[^\w\d\-]+/g, "~")
+      ];
+    }, [])
+    .join("|");
+}

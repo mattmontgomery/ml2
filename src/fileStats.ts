@@ -13,9 +13,8 @@ export default async function fileExists(
   filePath: string
 ): Promise<ExtendedStats> {
   let fileStats: Stats | null = null;
-  const imagePath = path.join(__dirname, "..", "sample-data", filePath);
   try {
-    fileStats = await stat(imagePath);
+    fileStats = await stat(filePath);
   } catch (e) {}
-  return fileStats ? Object.assign(fileStats, { path: imagePath }) : null;
+  return fileStats ? Object.assign(fileStats, { path: filePath }) : null;
 }

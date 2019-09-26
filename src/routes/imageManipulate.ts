@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import fileStats from "../fileStats";
 import manipulate, {
-  Instructions,
   parseInstructions,
-  parseInstructionsOrder
+  parseInstructionsOrder,
+  stringifyInstructions
 } from "../manipulate";
-import * as sharp from "sharp";
 import * as path from "path";
 
 export default async function imageManipulate(
@@ -18,24 +17,18 @@ export default async function imageManipulate(
   const instructionsOrder = parseInstructionsOrder(
     req.params.imageInstructions
   );
+  const newFilename = `${stringifyInstructions(instructions)}-${
+    req.params.imagePath
+  }`;
   const image = manipulate({
     instructions,
     instructionsOrder,
-    imagePath: path.join(
-      __dirname,
-      "..",
-      "..",
-      "sample-data",
-      req.params.imagePath
-    )
+    imagePath: path.join(req.app.get("mediaPath"), req.params.imagePath)
   });
   const outputPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "sample-data",
+    req.app.get("mediaPath"),
     "resized",
-    `${req.params.imageInstructions.replace(/:/g, "~")}-${req.params.imagePath}`
+    newFilename
   );
   image.toFile(outputPath);
   res.json({
@@ -43,6 +36,7 @@ export default async function imageManipulate(
     stats,
     instructions,
     instructionsOrder,
+    newFilename,
     outputPath
   });
   next();

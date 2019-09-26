@@ -15,8 +15,8 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
-    "start": "ts-node bin/start.ts",
-    "dev": "nodemon -e ts -x 'BASE_PATH=. yarn start' --verbose"
+    "start": "MEDIA_PATH=./sample-data ts-node bin/server.ts",
+    "dev": "nodemon -e ts -x 'yarn start' --verbose"
   },
   "devDependencies": {
     "@types/node": "^12.7.7",
