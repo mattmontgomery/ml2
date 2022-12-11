@@ -7,7 +7,7 @@
     "@types/express": "^4.17.1",
     "@types/sharp": "^0.22.3",
     "bluebird": "^3.5.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "prettier": "^1.18.2",
     "sharp": "^0.23.0",
